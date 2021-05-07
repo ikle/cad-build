@@ -1,0 +1,3 @@
+[submodule "prjtrellis"]
+	path = prjtrellis
+	url = https://github.com/YosysHQ/prjtrellis.git
