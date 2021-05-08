@@ -22,8 +22,10 @@ all: package
 fetch:
 	git submodule init
 	git submodule update --init --recursive $(MODULE)
+	cd "$(SRC)" && git reset --hard HEAD
+	patch -d "$(SRC)" -p1 -i "$(CURDIR)/nextpnr-cmake-3.7.patch"
 
-configure:
+configure: fetch
 	rm -rf "$(WORK)"
 	mkdir "$(WORK)"
 	cd "$(WORK)" && \
@@ -44,3 +46,4 @@ package: install
 
 clean:
 	rm -rf "$(TARGET)" "$(PACK)" "$(WORK)"
+	cd "$(SRC)" && git reset --hard HEAD
