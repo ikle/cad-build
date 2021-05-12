@@ -4,46 +4,25 @@
 #	libeigen3-dev
 #
 
-PREFIX	?= "$(HOME)/cad"
 ARCHES	?= ecp5
 
 MODULE	= nextpnr
 
-SRC	= $(CURDIR)/$(MODULE)
-WORK	= $(CURDIR)/$(MODULE)-build
-PACK	= $(CURDIR)/$(MODULE)-pack
-
-TARGET	= $(MODULE)-pack.tgz
-
-.PHONY: all fetch configure compile install package clean
-
-all: package
+include make-module.mk
 
 fetch:
-	git submodule init
-	git submodule update --init $(MODULE)
 	cd "$(SRC)" && git reset --hard HEAD
 	patch -d "$(SRC)" -p1 -i "$(CURDIR)/nextpnr-cmake-3.7.patch"
 
-configure: fetch
-	rm -rf "$(WORK)"
-	mkdir "$(WORK)"
+configure:
 	cd "$(WORK)" && \
 	cmake "$(SRC)" \
 		-DARCH=$(ARCHES) \
 		-DCMAKE_INSTALL_PREFIX="$(PREFIX)" \
 		-DCMAKE_BUILD_TYPE=Release
 
-compile: configure
+compile:
 	make -C "$(WORK)" -j4
 
-install: compile
-	rm -rf "$(PACK)"
+install:
 	umask 022 && make -C "$(WORK)" DESTDIR="$(PACK)" install
-
-package: install
-	fakeroot tar czf "$(TARGET)" -C "$(PACK)" .
-
-clean:
-	rm -rf "$(TARGET)" "$(PACK)" "$(WORK)"
-	cd "$(SRC)" && git reset --hard HEAD
