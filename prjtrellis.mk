@@ -7,7 +7,7 @@ PREFIX	?= "$(HOME)/cad"
 
 MODULE	= prjtrellis
 
-SRC	= $(CURDIR)/$(MODULE)/libtrellis
+SRC	= $(CURDIR)/$(MODULE)
 WORK	= $(CURDIR)/$(MODULE)-build
 PACK	= $(CURDIR)/$(MODULE)-pack
 
@@ -25,7 +25,7 @@ configure: fetch
 	rm -rf "$(WORK)"
 	mkdir "$(WORK)"
 	cd "$(WORK)" && \
-	cmake "$(SRC)" \
+	cmake "$(SRC)/libtrellis" \
 		-DCMAKE_INSTALL_PREFIX="$(PREFIX)" \
 		-DCMAKE_BUILD_TYPE=Release
 
